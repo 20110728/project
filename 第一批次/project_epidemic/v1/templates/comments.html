@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论区</title>
+
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+    <style>
+        .ps {
+            margin-top: 70px;
+        }
+
+        body {
+            background-color: #23b0cc;
+            opacity: 0.8;
+        }
+
+        i {
+            margin-right: 8px;
+        }
+
+        .navbar {
+            border-radius: 0;
+        }
+
+        .oo {
+            /*background-color: #9a9a9a;*/
+            border-radius: 20px;
+        }
+
+        .outer {
+            border-radius: 20px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .media {
+            height: 180px;
+            margin-top: 30px;
+            margin-left: 20px;
+            border-radius: 20px;
+            margin-right: 20px;
+            background-color: #6dc0b2;
+        }
+
+        .font {
+            font-family: 幼圆, serif;
+            font-weight: bolder;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .panel-add-com {
+            margin-top: 80px;
+            width: 400px;
+            height: 600px;
+            border-radius: 20px;
+            background-color: #cae1c9;
+            position: fixed;
+            top: 15%;
+            right: 10%;
+        }
+
+        #com-area {
+            resize: none;
+            width: 370px;
+            margin: 10px auto;
+        }
+
+        #com-title {
+            resize: none;
+            width: 370px;
+            margin: 10px auto;
+        }
+
+
+        .btn-add-com {
+            width: 250px;
+            height: 50px;
+            margin-top: 20px;
+            margin-left: 55px;
+            background-color: #b4b091;
+            font-size: 22px;
+
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航条 -->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- 汉堡键 -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">疫情查看平台</a>
+        </div>
+
+        <!-- 内容 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
+            <!-- 左 -->
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="#" aria-hidden="true" id="home">
+                    <i class="fa fa-home"></i> HomeFrame
+                </a></li>
+                <li><a href="/comments" class="active" style="background-color: black; color: white">评论区</a></li>
+            </ul>
+
+            <!-- 右 -->
+            <ul class="nav navbar-nav navbar-right">
+                <!-- 时间 -->
+                <li><a href="#">
+                    <i class="fa fa-calendar" aria-hidden="true"> </i>
+                    <span id="tim"></span>
+                </a></li>
+                <!-- 用户信息 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" id="after_com">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        <span id="now_username">{{username}}</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 主页面 -->
+<div class="container clearfix ps">
+    <!-- 左边 -->
+    <div class="col-sm-8 oo">
+        {% for item in data_list %}
+        <div class="outer">
+            <div class="media clearfix" style="margin-top: 10px">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object" data-src="holder.js/64x64" alt="64x64"
+                             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xODQyZTg2YTI5ZSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE4NDJlODZhMjllIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxMy40NTgzMzIwNjE3Njc1NzgiIHk9IjM2LjQwMDAwMDA5NTM2NzQzIj42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="
+                             data-holder-rendered="true" style="width: 64px; height: 64px;">
+                    </a>
+                </div>
+                <div class="media-body font" style="height: 150px">
+                    <div class="media-heading" style="font-size: 20px">{{ item.tittle }}</div>
+                    {{ item.comment }}
+                </div>
+                <div class="font" style="float: right">
+                    <span>
+                        <i class="fa fa-user-o" aria-hidden="true"></i>{{ item.publisher }}
+                    </span>
+                    <span style="margin-right: 30px"></span>
+                    <span>
+                        <i class="fa fa-calendar" aria-hidden="true"> </i>{{ item.pTime }}
+                    </span>
+                    <span style="margin-right: 20px"></span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- 右边 -->
+    <div class="col-sm-4">
+        <div class="panel panel-default panel-add-com">
+
+            <div class="panel-body">
+                <div style="font-size: 26px; font-weight: bolder">发表评论</div>
+                <form method="post" action="/add/comments">
+                    <div class="form-group" style="margin-top: 25px">
+                        <label for="com-title" style="font-size: 23px">标题</label>
+                        <textarea rows="2" class="form-control" name="c_title" id="com-title"
+                                  placeholder="在此处写标题"></textarea>
+                    </div>
+                    <div class="form-group" style="margin-top: 30px">
+                        <label for="com-area" style="font-size: 23px">评论</label>
+                        <textarea rows="10" class="form-control" id="com-area" name="c_content"
+                                  placeholder="在此处写评论"></textarea>
+                    </div>
+                    <input type="text" class="hide" value="{{username}}" name="com_user">
+                    <button type="submit" class="btn btn-info btn-add-com">发送</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery-3.6.1.min.js"></script>
+<script src="/static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
+
+<script>
+    $("#home").click(function () {
+        window.history.back();
+    });
+
+    function gettime() {
+        $.ajax({
+            url: "/time",
+            timeout: 3000,
+            success: function (data) {
+                $("#tim").html(data)
+            },
+            error: function () {
+
+            }
+        })
+    }
+    gettime();
+    setInterval(gettime, 1000);
+
+
+</script>
+
+<!-- 新增评论事件 -->
+{% if ac_type == -1 %}
+<script>
+    setTimeout(function () {
+        alert("标题不能为空");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if ac_type == -2 %}
+<script>
+    setTimeout(function () {
+        alert("内容不能为空");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if ac_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("发表成功！");
+        $("#com-title").text("");
+        $("#com-area").text("");
+        window.history.go(-2);
+    }, 50);
+</script>
+{% endif %}
+</body>
+</html>

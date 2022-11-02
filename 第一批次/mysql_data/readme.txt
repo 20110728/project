@@ -1,0 +1,1 @@
+这是我通过sqlyog导出的数据库实例，在data目录下名为epidemic.sql

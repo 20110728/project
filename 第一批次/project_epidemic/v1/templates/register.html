@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+
+    <style>
+        body {
+            background: url('https://ts1.cn.mm.bing.net/th/id/R-C.8792b3065acaa7186bff7560fa70e138?rik=Fo1qlwvfnF3pNw&riu=http%3a%2f%2fimage.qianye88.com%2fpic%2fdeedf80823d0e2beaa8b683ed94c5529&ehk=B%2fzkUvrOdJbtcw1GtF1bfC0kMM%2bwnHbvnRNjTgl1IBA%3d&risl=&pid=ImgRaw&r=0') no-repeat;
+            background-size: 1720px 950px;
+            opacity: 0.8;
+        }
+
+        #register_box {
+            width: 25%;
+            height: 400px;
+            background-color: #00000060;
+            margin: auto;
+            margin-top: 13%;
+            text-align: center;
+            border-radius: 10px;
+            padding: 50px 50px;
+        }
+
+        h1 {
+            color: rgba(255, 255, 255, 0.69);
+            margin-top: 5%;
+        }
+
+        #input_username {
+            margin-top: 13%;
+        }
+
+        #input_password {
+            margin-top: 6%;
+        }
+
+        input {
+            border: 0;
+            width: 70%;
+            font-size: 15px;
+            color: rgba(223, 223, 223, 0.76);
+            background: transparent;
+            border-bottom: 1px solid #fff;
+            padding: 5px 10px;
+            outline: none;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        #register {
+            margin-top: 45px;
+            width: 70%;
+            height: 34px;
+            border-radius: 10px;
+            border: 0;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            font-size: 15px;
+            background-image: linear-gradient(to right, #30cfd0, #330867);
+            opacity: 0.8;
+        }
+
+        #register:hover {
+            opacity: 1;
+        }
+
+        input:hover {
+            opacity: 1;
+        }
+
+        .icon_sty{
+            color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="register_box">
+    <h1>Register</h1>
+    <form method="post" action="/register">
+        <div id="input_username">
+            <i class="fa fa-user icon_sty" aria-hidden="true" style="margin-right: 18px"></i>
+            <input type="text" id="username" placeholder="请输入用户名" name="re_username">
+        </div>
+        <div id="input_password">
+            <i class="fa fa-key icon_sty" aria-hidden="true" style="margin-right: 14px"></i>
+            <input type="password" id="password" placeholder="请输入密码" name="re_password">
+        </div>
+        <button id="register">注册</button>
+        <br>
+    </form>
+</div>
+
+<script src="/static/js/jquery-3.6.1.min.js"></script>
+<script src="/static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
+<script src="/static/js/echarts.min.js"></script>
+
+<!-- 注册事件 -->
+{% if register_type == 3 %}
+<script>
+    setTimeout(function () {
+        alert("用户名不能为空")
+    }, 50);
+</script>
+{% endif %}
+{% if register_type == 4 %}
+<script>
+    setTimeout(function () {
+        alert("密码不能为空")
+    }, 50);
+</script>
+{% endif %}
+{% if register_type == 2 %}
+<script>
+    setTimeout(function () {
+        alert("用户名已存在")
+    }, 50);
+</script>
+{% endif %}
+{% if register_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("注册成功！即将返回主页");
+        location.href = "/";
+    }, 50);
+</script>
+{% endif %}
+
+
+</body>
+</html>

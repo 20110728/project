@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+<link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        body {
+            background-color: #dddddd;
+        }
+
+        .num {
+            display: inline-block;
+            margin: 10px auto;
+        }
+
+        .txt {
+            display: inline-block;
+            margin: 10px auto;
+        }
+
+        #map {
+            height: 400px;
+            width: 600px;
+            margin: 10px auto 15px;
+        }
+
+        .navbar {
+            border-radius: 0;
+            height: 52px;
+        }
+
+        .login {
+            margin-top: 200px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        li i {
+            margin-right: 8px;
+        }
+
+        .total_situation {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .total_situation_t {
+            font-family: "幼圆";
+            margin-top: 5px;
+            margin-left: 40px;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .total_situation_n {
+            font-family: "幼圆";
+            font-size: 30px;
+            font-weight: bolder;
+        }
+
+        .map_add {
+            margin-top: 100px;
+            width: 700px;
+            background-color: #d3d3d3;
+        }
+
+        .map_add span {
+            font-family: "幼圆";
+            margin-left: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .login_message {
+            position: absolute;
+            width: 500px;
+            left: 600px;
+            top: 10px;
+            opacity: 0.90;
+        }
+
+        .confirm_btn {
+            width: 200px;
+            margin-left: 175px;
+        }
+
+        #sub-com {
+            position: absolute;
+            background-color: #2e2e2e;
+            width: 60px;
+            height: 30px;
+            left: 8%;
+            margin-top: 0;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航条 -->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- 汉堡键 -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">疫情查看平台</a>
+        </div>
+
+        <!-- 内容 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
+            <!-- 左 -->
+            <ul class="nav navbar-nav navbar-left">
+                <li class="active"><a href="#">
+                    <i class="fa fa-home" aria-hidden="true"></i> HomeFrame
+                </a></li>
+                <li>
+                    <a href="/comments" style="text-align: center">
+                        <form method="post" action="/comments">
+                            <input class="hide" type="text" name="now_username" value="{{username}}" checked>
+                            <input type="submit" value="" id="sub-com">
+                        </form>
+                        评论区
+                    </a>
+                </li>
+                <li><a href="https://2019ncov.chinacdc.cn/2019-nCoV/" target="_blank">其他平台</a></li>
+                <li class="dropdown hide" id="dropdown-left">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">管理员功能<span class="caret"></span></a>
+                    <ul class="dropdown-menu" id="dropdown-menu-left">
+                        <li><a href="#"></a></li>
+                        <li><a href="#">功能1</a></li>
+                        <li><a href="#">功能2</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">功能3</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">功能4</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- 右 -->
+            <ul class="nav navbar-nav navbar-right">
+                <!-- 时间 -->
+                <li><a href="#">
+                    <i class="fa fa-calendar" aria-hidden="true"> </i>
+                    <span id="tim"></span>
+                </a></li>
+                <!-- 登录 -->
+                <li><a href="#" data-toggle="modal" data-target="#login-Modal" id="login">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>登录
+                </a></li>
+                <!-- 注册 -->
+                <li><a href="/register" id="register">
+                    <i class="fa fa-id-card-o" aria-hidden="true"></i>注册
+                </a></li>
+                <!-- 用户信息 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" role="button" aria-haspopup="true"
+                       aria-expanded="false" id="before_login" data-toggle="modal" data-target="#login-Modal">
+                        <i class="fa fa-question-circle-o" aria-hidden="true"></i>登录后查看</a>
+                    <a href="#" class="dropdown-toggle hide" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" id="after_login">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        <span id="now_username">{{username}}</span>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu hide" id="dropdown-mean-right">
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#" class="hide" data-toggle="modal" data-target="#root-add-Modal" id="root-add">新增管理员</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#change-password-Modal" id="change-password">
+                            修改密码</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/" id="cancellation">注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 登录提示信息 -->
+<div class="login_message">
+    <div class="alert alert-success hide" id="user-login-message">
+        <strong>success!</strong>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <div class="alert alert-warning hide" id="admain-login-message">
+        <strong>admain success！</strong>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+</div>
+
+<!-- 登录模块 -->
+<div class="login modal fade" id="login-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">登录</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" action="/login">
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-user" aria-hidden="true" style="margin-right: 13px"></i>Username
+                        </label>
+                        <input type="text" name="username" class="form-control" id="inputUsername"
+                               placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">
+                            <i class="fa fa-key" aria-hidden="true" style="margin-right: 9px"></i>Password
+                        </label>
+                        <input type="password" name="password" class="form-control" id="inputPassword"
+                               placeholder="Password">
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="ifRoot" value="1"> root login
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary confirm_btn">登录</button>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 修改密码模块 -->
+<div class="login modal fade" id="change-password-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">修改密码</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" action="/change/password">
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-info" aria-hidden="true" style="margin-right: 15px"></i>现在的密码
+                        </label>
+                        <input type="text" name="now_password" class="form-control" id="yourPassword"
+                               placeholder="请输入现在的密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">
+                            <i class="fa fa-key" aria-hidden="true" style="margin-right: 7px"></i>新的密码
+                        </label>
+                        <input type="password" name="new_password" class="form-control" id="newPassword"
+                               placeholder="请输入新的密码">
+                    </div>
+                    <div class="form-group hide">
+                        <input type="text" name="now_username" value="{{username}}" checked>
+                    </div>
+                    <button type="submit" class="btn btn-primary confirm_btn">确认</button>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增管理员模块 -->
+<div class="login modal fade" id="root-add-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">新增管理员</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" action="/add/root">
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-user" aria-hidden="true" style="margin-right: 13px"></i>Username
+                        </label>
+                        <input type="text" name="username" class="form-control" id="addUsername"
+                               placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">
+                            <i class="fa fa-key" aria-hidden="true" style="margin-right: 9px"></i>Password
+                        </label>
+                        <input type="password" name="password" class="form-control" id="addPassword"
+                               placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary confirm_btn">确认</button>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 累计情况 -->
+<div class="container total_situation">
+    <div class="txt total_situation_t">累计确诊：</div>
+    <div class="num total_situation_n" style="color: #761311"><span></span></div>
+    <div class="txt total_situation_t ">累计境外：</div>
+    <div class="num total_situation_n" style="color: #1e6976"><span></span></div>
+    <div class="txt total_situation_t">累计治愈：</div>
+    <div class="num total_situation_n" style="color: #08764b"><span></span></div>
+    <div class="txt total_situation_t">累计死亡：</div>
+    <div class="num total_situation_n" style="color: #140b16"><span></span></div>
+</div>
+
+<!-- 地图模块 -->
+<div class="container map_add">
+    <span>新增病例</span>
+    <div id="map"></div>
+</div>
+
+
+<script src="/static/js/jquery-3.6.1.min.js"></script>
+<script src="/static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
+<script src="/static/js/echarts.min.js"></script>
+<script src="/static/js/china.js"></script>
+<script src="/static/js/controller.js"></script>
+<script src="/static/js/map.js"></script>
+
+
+<!-- 登录事件 -->
+{% if login_type == -1 %}
+<script>
+    setTimeout(function () {
+        alert("用户名不能为空！");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+{% if login_type == -2 %}
+<script>
+    setTimeout(function () {
+        alert("密码不能为空！");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+{% if login_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("用户名不存在！");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+{% if login_type == 2 %}
+<script>
+    setTimeout(function () {
+        alert("密码错误！");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+{% if login_type == 3 %}
+<script>
+    $("#user-login-message").removeClass("hide");
+    $("#before_login").addClass("hide");
+    $("#after_login").removeClass("hide");
+    $("#login").addClass("hide");
+    $("#register").addClass("hide");
+    $("#dropdown-mean-right").removeClass("hide")
+</script>
+{% endif %}
+{% if login_type == 4 %}
+<script>
+    setTimeout(function () {
+        alert("您不是管理员用户！");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+{% if login_type == 5 %}
+<script>
+    $("#admain-login-message").removeClass("hide")
+    $("#before_login").addClass("hide")
+    $("#after_login").removeClass("hide")
+    $("#login").addClass("hide")
+    $("#register").addClass("hide")
+    $("#dropdown-mean-right").removeClass("hide")
+    $("#dropdown-left").removeClass("hide")
+    $("#root-add").removeClass("hide")
+</script>
+{% endif %}
+
+
+<!-- 修改密码事件 -->
+{% if change_password_type == -1 %}
+<script>
+    setTimeout(function () {
+        alert("当前密码不能为空！");
+        window.history.back();  //返回上一页
+    }, 20);
+</script>
+{% endif %}
+{% if change_password_type == -2 %}
+<script>
+    setTimeout(function () {
+        alert("新密码不能为空！");
+        window.history.back();  //返回上一页
+    }, 20);
+</script>
+{% endif %}
+{% if change_password_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("当前密码输入错误！");
+        window.history.back();  //返回上一页
+    }, 20);
+</script>
+{% endif %}
+{% if change_password_type == 2 %}
+<script>
+    setTimeout(function () {
+        alert("修改成功，请重新登录");
+        location.href = "/";
+    }, 20);
+</script>
+{% endif %}
+
+<!-- 新增管理员事件 -->
+{% if add_root_type == -1 %}
+<script>
+    setTimeout(function () {
+        alert("用户名不能为空");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if add_root_type == -2 %}
+<script>
+    setTimeout(function () {
+        alert("密码不能为空");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if add_root_type == 2 %}
+<script>
+    setTimeout(function () {
+        alert("用户名已存在");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if add_root_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("管理员添加成功！");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+
+
+</body>
+</html>

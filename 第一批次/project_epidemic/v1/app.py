@@ -1,4 +1,7 @@
+import datetime
+
 from flask import Flask, render_template, jsonify, request
+
 import utils
 import spider
 import time
@@ -61,6 +64,83 @@ def get_map_data():
     for tup in utils.get_map_data():
         res.append({"name": tup["province"], "value": int(tup["sum(confirm_add)"])})
     return jsonify({"data": res})
+
+
+@app.route("/north")
+def get_north_data():
+    data = utils.get_north_data()
+    province = []
+    confirm = []
+    for k in data:
+        dict1 = dict(k)
+        province.append(dict1['province'])
+        confirm.append(int(dict1['confirm_add']))
+    return jsonify({"province": province, "confirm": confirm})
+
+
+@app.route("/south")
+def get_south_data():
+    data = utils.get_south_data()
+    province = []
+    confirm = []
+    for k in data:
+        dict1 = dict(k)
+        province.append(dict1['province'])
+        confirm.append(int(dict1['confirm_add']))
+    return jsonify({"province": province, "confirm": confirm})
+
+
+@app.route("/west")
+def get_west_data():
+    data = utils.get_west_data()
+    province = []
+    confirm = []
+    for k in data:
+        dict1 = dict(k)
+        province.append(dict1['province'])
+        confirm.append(int(dict1['confirm_add']))
+    return jsonify({"province": province, "confirm": confirm})
+
+
+@app.route("/predict")
+def get_predict_data():
+    data = utils.get_predict_data()
+    config = utils.get_predict_config()
+    x1 = 0
+    x2 = 0
+    x3 = 0
+    x4 = 0
+    x5 = 0
+    c = 1
+    base_number = 1
+    for conf in config:
+        x1 = conf['x1']
+        x2 = conf['x2']
+        x3 = conf['x3']
+        x4 = conf['x4']
+        x5 = conf['x5']
+        c = conf['c']
+        base_number = conf['base_number']
+        break
+
+    day, confirm_add, suspect_add = [], [], []
+    sum1 = 0
+    time1 = datetime.datetime.now()
+    for t in data[3:]:
+        dict1 = dict(t)
+        day.append(dict1['ds'].strftime("%m-%d"))  # a是datatime类型
+        confirm_add.append(dict1['l_confirm_add'])
+        suspect_add.append(dict1['l_confirmWzz_add'])
+        sum1 = sum1 + dict1['l_confirm_add']
+        time1 = dict1['ds']
+    for j in range(4, 10):
+        temp = time1
+        for i in range(1, j):
+            temp = (temp + datetime.timedelta(days=1))
+        day.append(temp.strftime("%m-%d"))
+        confirm_add.append(int(pow(sum1 / (3 * base_number), 1 / 10) * (
+                x1 * pow(j, 1) + x2 * pow(j, 2) + x3 * pow(j, 3) + x4 * pow(j, 4) + x5 * pow(j, 5)) + c))
+    return jsonify({"day": day, "confirm_add": confirm_add, "suspect_add": suspect_add})
 
 
 # 注册
@@ -133,6 +213,27 @@ def add_root():
             add_root_type = utils.add_root(username, password)
 
         return render_template("index.html", add_root_type=add_root_type)
+
+
+@app.route("/change/parameter", methods=["get", "post"])
+def change_parameter():
+    if request.method == "GET":
+        return render_template("index.html")
+    else:
+        x1 = request.form.get("x1")
+        x2 = request.form.get("x2")
+        x3 = request.form.get("x3")
+        x4 = request.form.get("x4")
+        x5 = request.form.get("x5")
+        c = request.form.get("c")
+        base_number = request.form.get("base_number")
+        print(x1, x2, x3, x4, x5, c, base_number)
+        if x1 is None or x1 == "" or x1 == "" or x2 == "" or x3 == "" or x4 == "" or x5 == "" or c == "" or base_number == "":
+            change_parameter_type = -1
+        else:
+            change_parameter_type = utils.change_parameter(x1, x2, x3, x4, x5, c, base_number)
+
+        return render_template("index.html", change_parameter_type=change_parameter_type)
 
 
 # 主页

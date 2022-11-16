@@ -99,6 +99,43 @@
             margin-top: 0;
             opacity: 0;
         }
+
+        #north {
+    	    position: absolute;
+	        width: 26%;
+	        height: 30%;
+	        top: 20%;
+	        right: 0.5%;
+	        background: #666666;
+        }
+
+         #south {
+    	    position: absolute;
+	        width: 26%;
+	        height: 30%;
+	        top: 55%;
+	        right: 0.5%;
+	        background: #666666;
+        }
+
+        #west {
+    	    position: absolute;
+	        width: 26%;
+	        height: 30%;
+	        top: 20%;
+	        left: 0.5%;
+	        background: #666666;
+        }
+
+        #predict {
+	        position: absolute;
+	        width: 26%;
+	        height: 30%;
+	        top: 55%;
+	        left: 0.5%;
+	        background: #777;
+}
+
     </style>
 </head>
 <body>
@@ -140,7 +177,7 @@
                        aria-expanded="false">管理员功能<span class="caret"></span></a>
                     <ul class="dropdown-menu" id="dropdown-menu-left">
                         <li><a href="#"></a></li>
-                        <li><a href="#">功能1</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#change-parameter-Modal" id="change-parameter">修改参数</a>
                         <li><a href="#">功能2</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">功能3</a></li>
@@ -286,6 +323,78 @@
     </div>
 </div>
 
+<!-- 修改参数模块 -->
+<div class="login modal fade" id="change-parameter-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">修改参数</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" action="/change/parameter">
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-x1" aria-hidden="true" style="margin-right: 13px"></i>X1
+                        </label>
+                        <input type="text" name="x1" class="form-control" id="x1"
+                               placeholder="x1">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-x2" aria-hidden="true" style="margin-right: 13px"></i>X2
+                        </label>
+                        <input type="text" name="x2" class="form-control" id="x2"
+                               placeholder="x2">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-x3" aria-hidden="true" style="margin-right: 13px"></i>X3
+                        </label>
+                        <input type="text" name="x3" class="form-control" id="x3"
+                               placeholder="x3">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-x4" aria-hidden="true" style="margin-right: 13px"></i>X4
+                        </label>
+                        <input type="text" name="x4" class="form-control" id="x4"
+                               placeholder="x4">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-x5" aria-hidden="true" style="margin-right: 13px"></i>X5
+                        </label>
+                        <input type="text" name="x5" class="form-control" id="x5"
+                               placeholder="x5">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-c" aria-hidden="true" style="margin-right: 13px"></i>c
+                        </label>
+                        <input type="text" name="c" class="form-control" id="c"
+                               placeholder="c">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUsername">
+                            <i class="fa fa-base_number" aria-hidden="true" style="margin-right: 13px"></i>base_number
+                        </label>
+                        <input type="text" name="base_number" class="form-control" id="base_number"
+                               placeholder="base_number">
+                    </div>
+                    <button type="submit" class="btn btn-primary confirm_btn">确认</button>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 新增管理员模块 -->
 <div class="login modal fade" id="root-add-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -333,6 +442,7 @@
     <div class="num total_situation_n" style="color: #08764b"><span></span></div>
     <div class="txt total_situation_t">累计死亡：</div>
     <div class="num total_situation_n" style="color: #140b16"><span></span></div>
+
 </div>
 
 <!-- 地图模块 -->
@@ -341,11 +451,30 @@
     <div id="map"></div>
 </div>
 
+<div class="container north_top">
+    <div id="north"></div>
+</div>
+
+<div class="container south_top">
+    <div id="south"></div>
+</div>
+
+<div class="container west_top">
+    <div id="west"></div>
+</div>
+
+<div class="container predict">
+    <div id="predict"></div>
+</div>
 
 <script src="/static/js/jquery-3.6.1.min.js"></script>
 <script src="/static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
 <script src="/static/js/echarts.min.js"></script>
 <script src="/static/js/china.js"></script>
+<script src="/static/js/ec_north.js"> </script>
+<script src="/static/js/ec_south.js"> </script>
+<script src="/static/js/ec_west.js"> </script>
+<script src="/static/js/ec_predict.js"> </script>
 <script src="/static/js/controller.js"></script>
 <script src="/static/js/map.js"></script>
 
@@ -483,6 +612,31 @@
 </script>
 {% endif %}
 
+<!-- 修改参数事件 -->
+{% if change_parameter_type == -1 %}
+<script>
+    setTimeout(function () {
+        alert("参数不能为空");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if change_parameter_type == 2 %}
+<script>
+    setTimeout(function () {
+        alert("修改参数失败");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
+{% if change_parameter_type == 1 %}
+<script>
+    setTimeout(function () {
+        alert("修改参数成功！");
+        window.history.back();  //返回上一页
+    }, 50);
+</script>
+{% endif %}
 
 </body>
 </html>

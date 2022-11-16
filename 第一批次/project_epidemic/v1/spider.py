@@ -62,7 +62,7 @@ def get_data():
 
 # 获取连接
 def get_conn():
-    conn = pymysql.connect(host="127.0.0.1", port=3306, user="root", passwd="123456", charset="utf8", db="epidemic")
+    conn = pymysql.connect(host="127.0.0.1", port=3306, user="root", passwd="20110728", charset="utf8", db="epidemic")
     curcor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     return conn, curcor

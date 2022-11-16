@@ -10,7 +10,7 @@ def get_time():
 
 # 获取连接
 def get_conn():
-    conn = pymysql.connect(host="127.0.0.1", port=3306, user="root", passwd="123456", charset="utf8", db="epidemic")
+    conn = pymysql.connect(host="127.0.0.1", port=3306, user="root", passwd="20110728", charset="utf8", db="epidemic")
     curcor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     return conn, curcor
@@ -46,6 +46,60 @@ def get_map_data():
     sql = "select province, sum(confirm_add) from details " \
           "where update_time=(select update_time from details order by update_time desc limit 1) " \
           "group  by province"
+    res = query(sql)
+    return res
+
+
+def get_north_data():
+    """
+    :return:  返回华北地区省份新增确诊人数前5名
+    """
+    sql = 'SELECT province,confirm_add FROM (select province,sum(confirm_add) as confirm_add from details where ' \
+          'update_time=(select update_time from details order by update_time desc limit 1) group by province) as a ' \
+          'where province="黑龙江" or province="吉林" or province="辽宁" or province="北京" or province="天津" or province="河北" ' \
+          'or province="河南" or province="山东" or province="山西" or province="陕西" or province="内蒙古" or province="安徽" ' \
+          'ORDER BY confirm_add ' \
+          'DESC LIMIT 5 '
+    res = query(sql)
+    return res
+
+
+def get_south_data():
+    """
+    :return:  返回华南地区省份新增确诊人数前5名
+    """
+    sql = 'SELECT province,confirm_add FROM (select province,sum(confirm_add) as confirm_add from details where ' \
+          'update_time=(select update_time from details order by update_time desc limit 1) group by province) as a ' \
+          'where province="江苏" or province="上海" or province="浙江" or province="湖北" or province="湖南" or province="福建" ' \
+          'or province="广东" or province="广西" or province="江西" or province="台湾" or province="海南" or province="香港" or ' \
+          'province="澳门" ' \
+          'ORDER BY confirm_add ' \
+          'DESC LIMIT 5 '
+    res = query(sql)
+    return res
+
+
+def get_west_data():
+    """
+    :return:  返回西部地区省份新增确诊人数前5名
+    """
+    sql = 'SELECT province,confirm_add FROM (select province,sum(confirm_add) as confirm_add from details where ' \
+          'update_time=(select update_time from details order by update_time desc limit 1) group by province) as a ' \
+          'where province="新疆" or province="青海" or province="西藏" or province="甘肃" or province="宁夏" or province="四川" ' \
+          'or province="重庆" or province="贵州" or province="云南" ORDER BY confirm_add ' \
+          'DESC LIMIT 5 '
+    res = query(sql)
+    return res
+
+
+def get_predict_data():
+    sql = "select ds,l_confirm_add,l_confirmWzz_add from total"
+    res = query(sql)
+    return res
+
+
+def get_predict_config():
+    sql = "select x1,x2,x3,x4,x5,c,base_number from config"
     res = query(sql)
     return res
 
@@ -127,6 +181,22 @@ def add_root(username, password):
         return 1  # 注册成功
     else:
         return 2  # 用户名已存在
+
+
+def change_parameter(x1, x2, x3, x4, x5, c, base_number):
+    conn = None
+    cursor = None
+    try:
+        conn, cursor = get_conn()
+        sql2 = "update config SET x1=%s,x2=%s,x3=%s,x4=%s,x5=%s,c=%s,base_number=%s"
+        cursor.execute(sql2, [x1, x2, x3, x4, x5, c, base_number, ])
+        conn.commit()
+        return 1  # 修改成功
+    except ValueError :
+        return 2  # 修改失败
+    finally:
+        close_conn(conn, cursor)
+
 
 
 # 查看评论
